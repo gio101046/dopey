@@ -9,7 +9,7 @@
             "type": "python",
             "request": "launch",
             "program": "dopey.py",
-            "args": ["./test.bf"],
+            "args": ["./helloworld.bf"],
             "console": "integratedTerminal"
         }
     ]
