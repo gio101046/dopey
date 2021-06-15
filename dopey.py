@@ -1,4 +1,5 @@
 import sys
+from blessed import Terminal
 
 # create memory buffer and pointer
 class Memory:
@@ -8,7 +9,8 @@ class Memory:
 
     @classmethod
     def get_pointer(cls) -> int:
-        pass
+        # TODO add logic to roll around buffer
+        return cls.pointer
 
 # define bf commands
 class Operation:
@@ -48,13 +50,15 @@ def perform_operation(operation: str) -> None:
     elif operation == Operation.SHIFT_RIGHT:
         Memory.pointer += 1
     elif operation == Operation.INCREMENT:
-        pass
+        Memory.buffer[Memory.get_pointer()] += 1
     elif operation == Operation.DECREMENT:
-        pass
+        Memory.buffer[Memory.get_pointer()] -= 1
     elif operation == Operation.OUTPUT:
-        pass
+        print(chr(Memory.buffer[Memory.get_pointer()]), end="")
     elif operation == Operation.INPUT:
-        pass
+        term = Terminal()
+        with term.cbreak():
+            Memory.buffer[Memory.get_pointer()] = ord(term.inkey())
 
 if __name__ == "__main__":
     main()
