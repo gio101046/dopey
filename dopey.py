@@ -1,3 +1,4 @@
+import sys
 
 # create memory buffer
 BUFFER_SIZE = 30_000
@@ -12,3 +13,18 @@ OUTPUT = "."
 INPUT = ","
 OPEN_LOOP = "["
 CLOSE_LOOP = "]"
+
+# get bf file location
+file_location = None
+if len(sys.argv) != 2:
+    print("Invalid or missing arguments...")
+    sys.exit()
+else:
+    file_location = sys.argv[1]
+
+# open file
+file = open(file_location, "r")
+print(file.read(1))
+
+
+
