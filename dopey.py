@@ -1,6 +1,5 @@
 import sys
 from io import TextIOWrapper
-from blessed import Terminal
 
 class MismatchBracketException(Exception):
     """ TODO line number and column """
@@ -10,6 +9,7 @@ class Memory:
     BUFFER_SIZE = 30_000
     buffer = [0 for _ in range(BUFFER_SIZE)]
     pointer = 0
+    input_buffer = []
 
     @classmethod
     def get_pointer(cls) -> int:
@@ -26,7 +26,6 @@ class Operation:
     OPEN_LOOP = "["
     CLOSE_LOOP = "]"
 
-    terminal = Terminal()
     loop_stack = []
 
     @classmethod
@@ -68,8 +67,11 @@ class Operation:
 
     @classmethod
     def input(cls, _) -> None:
-        with cls.terminal.cbreak():
-            Memory.buffer[Memory.get_pointer()] = ord(cls.terminal.inkey())
+        if not len(Memory.input_buffer):
+            input_ = input()
+            Memory.input_buffer += list(input_)
+        if len(Memory.input_buffer):
+            Memory.buffer[Memory.get_pointer()] = ord(Memory.input_buffer.pop(0))
 
     @classmethod
     def open_loop(cls, file: TextIOWrapper) -> None:
