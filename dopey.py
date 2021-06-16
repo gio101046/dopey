@@ -1,19 +1,24 @@
+import os
 import sys
 from io import TextIOWrapper
+from typing import Dict, List
 
 class MismatchBracketException(Exception):
     """ TODO line number and column """
     pass
 
+class MemoryException(Exception):
+    """ TODO line number and column """
+    pass
+
 class Memory:
-    BUFFER_SIZE = 30_000
+    BUFFER_SIZE = 300_000
     buffer = [0 for _ in range(BUFFER_SIZE)]
     pointer = 0
     input_buffer = []
 
     @classmethod
     def get_pointer(cls) -> int:
-        # TODO add logic to roll around buffer
         return cls.pointer
 
 class Operation:
@@ -29,29 +34,22 @@ class Operation:
     loop_stack = []
 
     @classmethod
-    def perform(cls, operation: str, file: TextIOWrapper) -> None:
-        switch = {
-            cls.SHIFT_LEFT: cls.shift_left,
-            cls.SHIFT_RIGHT: cls.shift_right,
-            cls.INCREMENT: cls.increment,
-            cls.DECREMENT: cls.decrement,
-            cls.OUTPUT: cls.output,
-            cls.INPUT: cls.input,
-            cls.OPEN_LOOP: cls.open_loop,
-            cls.CLOSE_LOOP: cls.close_loop
-        }
-
+    def perform(cls, operation: str, program: List, switch: Dict) -> None:
         if operation not in switch:
             return
-        switch[operation](file)
+        switch[operation](program)
 
     @classmethod
     def shift_left(cls, _) -> None:
         Memory.pointer -= 1
+        if Memory.pointer < 0:
+            raise MemoryException
     
     @classmethod
     def shift_right(cls, _) -> None:
         Memory.pointer += 1
+        if Memory.pointer >= Memory.BUFFER_SIZE:
+            raise MemoryException
 
     @classmethod    
     def increment(cls, _) -> None:
@@ -63,36 +61,57 @@ class Operation:
 
     @classmethod
     def output(cls, _) -> None:
-        print(chr(Memory.buffer[Memory.get_pointer()]), end="") # TODO rollover if too big in ASCII
+        sys.stdout.write(chr(Memory.buffer[Memory.get_pointer()])) # TODO rollover if too big in ASCII
 
     @classmethod
     def input(cls, _) -> None:
+        # flush text to terminal before asking for input
+        sys.stdout.flush()
+
         if not len(Memory.input_buffer):
-            input_ = input()
+            input_ = sys.stdin.readline()
             Memory.input_buffer += list(input_)
         if len(Memory.input_buffer):
             Memory.buffer[Memory.get_pointer()] = ord(Memory.input_buffer.pop(0))
 
     @classmethod
-    def open_loop(cls, file: TextIOWrapper) -> None:
+    def open_loop(cls, program: List) -> None:
         if not Memory.buffer[Memory.get_pointer()]:
-            while True:
-                operation = file.read(1)
-                if operation == Operation.CLOSE_LOOP:
-                    break
-                elif not operation:
-                    raise MismatchBracketException
+            # TODO redo this section to be more readable
+            stack = [Operation.OPEN_LOOP]
+            while program[1] < len(program[0]):
+                operation = program[0][program[1]] 
+                program[1] += 1
+                if operation == Operation.CLOSE_LOOP: 
+                    stack.pop()
+                    if not len(stack):
+                        return
+                elif operation == Operation.OPEN_LOOP:
+                    stack.append(Operation.OPEN_LOOP)
+            raise MismatchBracketException
         else:
-            cls.loop_stack.append(file.tell()-1)
+            cls.loop_stack.append(program[1]-1)
     
     @classmethod
-    def close_loop(cls, file: TextIOWrapper) -> None:
+    def close_loop(cls, program: List) -> None:
         if not len(cls.loop_stack):
             raise MismatchBracketException
 
         last_open_loop_pos = cls.loop_stack.pop()
         if Memory.buffer[Memory.get_pointer()]:
-            file.seek(last_open_loop_pos, 0)
+            program[1] = last_open_loop_pos
+
+    def get_operations_in_switch() -> Dict:
+        return {
+            Operation.SHIFT_LEFT: Operation.shift_left,
+            Operation.SHIFT_RIGHT: Operation.shift_right,
+            Operation.INCREMENT: Operation.increment,
+            Operation.DECREMENT: Operation.decrement,
+            Operation.OUTPUT: Operation.output,
+            Operation.INPUT: Operation.input,
+            Operation.OPEN_LOOP: Operation.open_loop,
+            Operation.CLOSE_LOOP: Operation.close_loop
+        }
 
 def main() -> None:
     file_location = None
@@ -103,13 +122,16 @@ def main() -> None:
         file_location = sys.argv[1]
 
     file = open(file_location, "r")
-    while True:
-        operation = file.read(1)
-        if not operation:
-            break
-        Operation.perform(operation, file)
-
+    program = [file.read(), 0] # TODO create files class
     file.close()
+
+    switch = Operation.get_operations_in_switch()
+
+    while program[1] < len(program[0]):
+        operation = program[0][program[1]]
+        program[1] += 1
+        Operation.perform(operation, program, switch)
+
     if len(Operation.loop_stack):
         raise MismatchBracketException
 
