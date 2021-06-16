@@ -1,6 +1,4 @@
-import os
 import sys
-from io import TextIOWrapper
 from typing import Dict, List
 
 class MismatchBracketException(Exception):
@@ -32,11 +30,18 @@ class Operation:
     CLOSE_LOOP = "]"
 
     loop_stack = []
+    loop_ignore_stack = []
 
     @classmethod
     def perform(cls, operation: str, program: List, switch: Dict) -> None:
+        # if operation does not exist, skip
         if operation not in switch:
             return
+
+        # dont perform any non loop operations if inside an ignore loop
+        if len(cls.loop_ignore_stack) and operation != Operation.CLOSE_LOOP and operation != Operation.OPEN_LOOP:
+            return
+
         switch[operation](program)
 
     @classmethod
@@ -62,12 +67,10 @@ class Operation:
     @classmethod
     def output(cls, _) -> None:
         sys.stdout.write(chr(Memory.buffer[Memory.get_pointer()])) # TODO rollover if too big in ASCII
+        sys.stdout.flush()
 
     @classmethod
     def input(cls, _) -> None:
-        # flush text to terminal before asking for input
-        sys.stdout.flush()
-
         if not len(Memory.input_buffer):
             input_ = sys.stdin.readline()
             Memory.input_buffer += list(input_)
@@ -77,26 +80,24 @@ class Operation:
     @classmethod
     def open_loop(cls, program: List) -> None:
         if not Memory.buffer[Memory.get_pointer()]:
-            # TODO redo this section to be more readable
-            stack = [Operation.OPEN_LOOP]
-            while program[1] < len(program[0]):
-                operation = program[0][program[1]] 
-                program[1] += 1
-                if operation == Operation.CLOSE_LOOP: 
-                    stack.pop()
-                    if not len(stack):
-                        return
-                elif operation == Operation.OPEN_LOOP:
-                    stack.append(Operation.OPEN_LOOP)
-            raise MismatchBracketException
+            # enter ignore loop if byte at pointer is zero
+            cls.loop_ignore_stack.append(Operation.OPEN_LOOP)
         else:
+            # save start loop position should we need to return
             cls.loop_stack.append(program[1]-1)
     
     @classmethod
     def close_loop(cls, program: List) -> None:
+        # check if in ignore loop
+        if len(cls.loop_ignore_stack):
+           cls.loop_ignore_stack.pop()
+           return
+
+        # check if there is a bracket mismatch
         if not len(cls.loop_stack):
             raise MismatchBracketException
 
+        # check if we need to repeat
         last_open_loop_pos = cls.loop_stack.pop()
         if Memory.buffer[Memory.get_pointer()]:
             program[1] = last_open_loop_pos
@@ -122,7 +123,7 @@ def main() -> None:
         file_location = sys.argv[1]
 
     file = open(file_location, "r")
-    program = [file.read(), 0] # TODO create files class
+    program = [file.read(), 0] # TODO create program class
     file.close()
 
     switch = Operation.get_operations_in_switch()
