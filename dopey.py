@@ -10,7 +10,7 @@ class MemoryException(Exception):
     pass
 
 class Memory:
-    BUFFER_SIZE = 300_000
+    BUFFER_SIZE = 30_000
     buffer = [0 for _ in range(BUFFER_SIZE)]
     pointer = 0
     input_buffer = []
