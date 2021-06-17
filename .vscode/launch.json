@@ -9,7 +9,7 @@
             "type": "python",
             "request": "launch",
             "program": "dopey.py",
-            "args": ["./test.bf"],
+            "args": ["./game-of-life.bf"],
             "console": "integratedTerminal"
         }
     ]
