@@ -67,7 +67,7 @@ class Operation:
     @classmethod
     def output(cls, _) -> None:
         sys.stdout.write(chr(Memory.buffer[Memory.get_pointer()])) # TODO rollover if too big in ASCII
-        sys.stdout.flush()
+        sys.stdout.flush() # TODO possible performance issue
 
     @classmethod
     def input(cls, _) -> None:
@@ -127,7 +127,6 @@ def main() -> None:
     file.close()
 
     switch = Operation.get_operations_in_switch()
-
     while program[1] < len(program[0]):
         operation = program[0][program[1]]
         program[1] += 1
