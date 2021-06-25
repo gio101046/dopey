@@ -104,16 +104,17 @@ class Operation:
         if Memory.buffer[Memory.get_pointer()]:
             program[1] = last_open_loop_pos
 
-    def get_operations_in_switch() -> Dict:
+    @classmethod
+    def get_operations_in_switch(cls) -> Dict:
         return {
-            Operation.SHIFT_LEFT: Operation.shift_left,
-            Operation.SHIFT_RIGHT: Operation.shift_right,
-            Operation.INCREMENT: Operation.increment,
-            Operation.DECREMENT: Operation.decrement,
-            Operation.OUTPUT: Operation.output,
-            Operation.INPUT: Operation.input,
-            Operation.OPEN_LOOP: Operation.open_loop,
-            Operation.CLOSE_LOOP: Operation.close_loop
+            cls.SHIFT_LEFT: cls.shift_left,
+            cls.SHIFT_RIGHT: cls.shift_right,
+            cls.INCREMENT: cls.increment,
+            cls.DECREMENT: cls.decrement,
+            cls.OUTPUT: cls.output,
+            cls.INPUT: cls.input,
+            cls.OPEN_LOOP: cls.open_loop,
+            cls.CLOSE_LOOP: cls.close_loop
         }
 
 def main() -> None:
