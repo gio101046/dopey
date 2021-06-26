@@ -1,6 +1,6 @@
-# dopey - Another Brainf**k Interpreter
+# dopey - Another Brainf*ck Interpreter
 
-The dopey brainf\*\*k interpreter was created as a side project to become familiar with Python 3. The goal was to fully implement all the features of brainf\*\*k as defined in this [wiki page](https://en.wikipedia.org/wiki/Brainfuck#Language_design) into dopey.
+The dopey brainf\*ck interpreter was created as a side project to become familiar with Python 3. The goal was to fully implement all the features of brainf\*ck as defined in this [wiki page](https://en.wikipedia.org/wiki/Brainfuck#Language_design) into dopey.
 
 ## Demo
 ![gif](https://i.imgur.com/9HbBB1k.gif)
