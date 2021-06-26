@@ -3,7 +3,7 @@
 The dopey brainf\*\*k interpreter was created as a side project to become familiar with Python 3. The goal was to fully implement all the features of brainf\*\*k as defined in this [wiki page](https://en.wikipedia.org/wiki/Brainfuck#Language_design) into dopey.
 
 ## Demo
-![gif](https://i.imgur.com/mqjNGzV.gif)
+![gif](https://i.imgur.com/9HbBB1k.gif)
 
 ## Implemetation Limitations
 
@@ -25,16 +25,20 @@ python3 --version
 
 ## Running dopey
 
-Clone the Github repository. From your terminal move to the root of the project and run the following line:
+Clone the Github repository and from your terminal move to the root of the project and run the following lines:
 
 ```bash
-python dopey.py my-bf-file.bf
+chmod +x dopey.py
+./dopey.py my_file.bf
 ```
 
-or in some systems
+You can also import an interpreter class included with dopey and use it in your own python scripts.
 
-```bash
-python3 dopey.py my-bf-file.bf
+```python
+from dopey import Interpreter
+
+interpreter = Interpreter()
+interpreter.execute("[brainf*ck code]++-->><<++--")
 ```
 
 ## Contributing

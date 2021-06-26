@@ -74,7 +74,7 @@ class _Operation:
 
     @classmethod
     def output(cls, _) -> None:
-        sys.stdout.write(chr(_Memory.buffer[_Memory.get_pointer()])) # TODO rollover if too big in ASCII
+        sys.stdout.write(chr(_Memory.buffer[_Memory.get_pointer()]))
         sys.stdout.flush() # TODO possible performance issue
 
     @classmethod
