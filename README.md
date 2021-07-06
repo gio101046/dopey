@@ -1,4 +1,6 @@
 # dopey - Another Brainf*ck Interpreter
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/gio101046/dopey.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/gio101046/dopey/alerts/)
+[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/gio101046/dopey.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/gio101046/dopey/context:python)
 
 The dopey brainf\*ck interpreter was created as a side project to become familiar with Python 3. The goal was to fully implement all the features of brainf\*ck as defined in this [wiki page](https://en.wikipedia.org/wiki/Brainfuck#Language_design) into dopey.
 
