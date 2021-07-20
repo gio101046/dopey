@@ -141,7 +141,7 @@ class Interpreter:
         if len(_Operation.loop_stack):
             raise MismatchBracketException
 
-def main() -> None:
+def _main() -> None:
     file_location = None
     if len(sys.argv) != 2:
         print("Invalid or missing arguments...")
@@ -157,4 +157,4 @@ def main() -> None:
     interpreter.execute(str_program)
 
 if __name__ == "__main__":
-    main()
+    _main()

@@ -2,14 +2,14 @@
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/gio101046/dopey.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/gio101046/dopey/alerts/)
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/gio101046/dopey.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/gio101046/dopey/context:python)
 
-The dopey brainf\*ck interpreter was created as a side project to become familiar with Python 3. The goal was to fully implement all the features of brainf\*ck as defined in this [wiki page](https://en.wikipedia.org/wiki/Brainfuck#Language_design) into dopey.
+Dopey is a brainf\*ck interpreter. It fully implements all the features of brainf\*ck as defined [here](https://en.wikipedia.org/wiki/Brainfuck#Language_design).
 
 ## Demo
-![gif](https://i.imgur.com/9HbBB1k.gif)
+![gif](https://i.imgur.com/QR9qh0e.gif)
 
 ## Implemetation Limitations
 
-The dopey is limited to a memory buffer of **30,000** byte cells all initialized to zero. Any attempts to move the pointer past the bounds of the memory buffer will result in an exception being raised. Attempting to print any cell with a value outside of the defined ASCII characters may also result in an exception.
+Dopey is limited to a memory buffer of **30,000** byte cells all initialized to zero. Any attempts to move the pointer past the bounds of the memory buffer will result in an exception being raised. Attempting to print any cell with a value outside of the defined ASCII characters may also result in an exception.
 
 ## Requirements
 
@@ -25,13 +25,16 @@ or in some systems
 python3 --version
 ```
 
-## Running dopey
+## Installing
 
-Clone the Github repository and from your terminal move to the root of the project and run the following lines:
+You can install dopey using `pip`. From the command line:
 
 ```bash
-chmod +x dopey.py
-./dopey.py my_file.bf
+# use pip python package manager to install dopey
+$ pip install dopey
+
+# run dopey using python
+$ python -m dopey my-bf-file.bf
 ```
 
 You can also import an interpreter class included with dopey and use it in your own python scripts.
